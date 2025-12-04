@@ -733,6 +733,27 @@ ul {
   text-shadow: 0 0 12px rgba(12, 27, 51, 0.08);
 }
 
+.milestone-role {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.recs-linkedin-text {
+  color: #0077b5;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: block;
+  transition: color 0.2s ease;
+}
+
+.recs-linkedin-text:hover {
+  color: #005582;
+  text-decoration: underline;
+}
+
 .milestone-text {
   font-size: 0.9rem;
   color: var(--text-secondary);
@@ -743,6 +764,7 @@ ul {
 
 /* Dark mode styles */
 [data-theme="dark"] .milestones-section,
+/* ... */
 .dark .milestones-section,
 .dark-mode .milestones-section {
   background-color: #1f2937;
@@ -1731,22 +1753,23 @@ ul {
   align-items: center;
 }
 
-.academic-logo {
+.recs-avatar {
   width: 48px;
   height: 48px;
-  min-width: 48px;
-  min-height: 48px;
-  border-radius: 8px;
-  background-color: #FFFFFF;
+  border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 1rem;
-  flex-shrink: 0;
-  overflow: hidden;
-  padding: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  position: relative;
+  background: var(--primary-color-soft); /* Cor de fundo para garantir preenchimento */
+  border: 2px solid #4A6FA5;
+}
+
+.recs-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.8;
 }
 
 .academic-logo img {
@@ -2135,11 +2158,12 @@ ul {
   width: 100%;
   margin: 0 auto;
   padding: 0 3rem;
+  height: 100%;
 }
 
 .recs-slides {
   position: relative;
-  min-height: 320px;
+  height: 400px; /* Altura fixa para o container dos slides */
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -2150,6 +2174,7 @@ ul {
 .recs-slide {
   position: absolute;
   width: 100%;
+  height: 400px; /* Altura fixa */
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -2188,9 +2213,11 @@ ul {
 }
 
 .recs-slide-content {
-  padding: 1.5rem; /* Aumentando um pouco o padding */
+  padding: 1.5rem;
   position: relative;
-  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -2252,26 +2279,28 @@ ul {
 
 .recs-footer {
   display: flex;
-  align-items: flex-start;
-  margin-top: auto; /* Empurra o rodapé para baixo */
-  padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  align-items: center;
+  margin-top: 1.5rem; /* Adicionei um espaçamento superior */
+  padding-top: 1.5rem; /* Aumentei o padding superior */
+  border-top: 1px solid rgba(0, 0, 0, 0.1); /* Linha um pouco mais visível */
   padding-bottom: 0.5rem;
 }
 
 .recs-avatar {
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background-color: #4A6FA5;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1rem;
-  margin-right: 0.8rem;
+  overflow: hidden;
+  margin-right: 0.75rem;
   flex-shrink: 0;
+  border: none;
+}
+
+.recs-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Garante que a imagem cubra todo o espaço */
+  border-radius: 50%; /* Garante que a imagem também seja arredondada */
 }
 
 .recs-name-container {

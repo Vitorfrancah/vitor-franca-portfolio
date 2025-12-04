@@ -120,23 +120,81 @@ const timelineData = [
     }
 ];
 
+// Função para limitar o texto a 80 palavras e adicionar três pontos
+function limitarTexto(texto) {
+    const palavras = texto.split(' ');
+    const limite = 80;
+    if (palavras.length > limite) {
+        return palavras.slice(0, limite).join(' ') + '...';
+    } else if (palavras.length > 0) {
+        return texto + '...';
+    }
+    return texto;
+}
+
 // Recomendações do LinkedIn - carrossel
 const recommendationsData = [
     {
         id: "reco-1",
-        text: "Tive a oportunidade de conhecer e liderar o Vitor em duas oportunidades distintas. Sua capacidade de aprendizado rápido e visão estratégica são diferenciais notáveis. Sempre demonstrou grande comprometimento e habilidade para resolver problemas complexos de forma criativa.",
+        text: limitarTexto("Tive a oportunidade de conhecer e liderar o Vitor em duas oportunidades distintas. Sua capacidade de aprendizado rápido e visão estratégica são diferenciais notáveis. Sempre demonstrou grande comprometimento e habilidade para resolver problemas complexos de forma criativa."),
         name: "Luiz Filipe Noman",
         role: "Product Manager | Gerente de Projetos de Tecnologia",
         url: "https://www.linkedin.com/in/vitor-melo-franca/details/recommendations/"
     },
     {
         id: "reco-2",
-        text: "Profissional extremamente dedicado e com grande capacidade analítica. O Vitor tem uma visão clara de produto e entrega resultados consistentes. Sua habilidade de comunicação e trabalho em equipe fazem dele um profissional valioso em qualquer time.",
-        name: "Maria Silva",
-        role: "Head of Product",
+        text: limitarTexto("Profissional exemplar, com quem tive o prazer de trabalhar no mesmo time na MaisTODOS. Sua proatividade e atenção aos detalhes são notáveis, assim como sua capacidade de comunicação clara e objetiva."),
+        name: "Saturnino Gomes de Oliveira",
+        role: "Product Designer | UX/UI | Strategy | Fintech | Payments",
+        url: "https://www.linkedin.com/in/vitor-melo-franca/details/recommendations/"
+    },
+    {
+        id: "reco-3",
+        text: limitarTexto("Trabalhar com o Vitor foi uma experiência enriquecedora. Sua competência técnica e profissionalismo são notáveis, sempre trazendo soluções inovadoras para desafios complexos. Sua combinação de habilidades técnicas e interpessoais o destaca como um profissional excepcional. Sua dedicação e ética de trabalho inspiram toda a equipe."),
+        name: "Alyson Fernandes da Silva Ambrósio",
+        role: "Pesquisador | Research | Análise de Dados | UX Research",
+        url: "https://www.linkedin.com/in/vitor-melo-franca/details/recommendations/"
+    },
+    {
+        id: "reco-4",
+        text: limitarTexto("Trabalhar com o Vitor em projetos desafiadores foi uma experiência valiosa. Sua dedicação e profissionalismo são admiráveis, assim como sua capacidade de comunicação clara e objetiva. Sua postura proativa e habilidade em resolver problemas complexos contribuíram significativamente para o sucesso de nossas iniciativas."),
+        name: "Jaqueline Gonzaga",
+        role: "Desenvolvedora Front-end | React | TypeScript | JavaScript",
         url: "https://www.linkedin.com/in/vitor-melo-franca/details/recommendations/"
     }
 ];
+
+// Função para gerar avatar com iniciais usando a cor azul do tema
+function gerarAvatar(nome) {
+    // Pega as iniciais do nome (primeira letra de cada palavra, máximo 2)
+    const iniciais = nome
+        .split(' ')
+        .map(n => n[0] || '')
+        .join('')
+        .toUpperCase()
+        .substring(0, 2);
+    
+    // Cria um elemento div para o avatar
+    const avatar = document.createElement('div');
+    avatar.className = 'recs-avatar';
+    avatar.style.backgroundColor = '#11345E'; // Azul escuro do tema
+    avatar.style.color = '#FFFFFF'; // Texto branco
+    avatar.style.display = 'flex';
+    avatar.style.alignItems = 'center';
+    avatar.style.justifyContent = 'center';
+    avatar.style.borderRadius = '50%';
+    avatar.style.width = '48px';
+    avatar.style.height = '48px';
+    avatar.style.fontWeight = '600';
+    avatar.style.fontSize = '16px';
+    avatar.style.boxShadow = 'none'; // Remove sombra
+    avatar.style.fontFamily = 'Inter, sans-serif';
+    avatar.style.border = 'none'; // Remove borda
+    avatar.style.overflow = 'hidden'; // Garante que nada vaze
+    avatar.textContent = iniciais;
+    
+    return avatar.outerHTML;
+}
 
 // Inicializa o carrossel de recomendações na seção de contato
 function initRecommendationsCarousel() {
@@ -165,31 +223,28 @@ function initRecommendationsCarousel() {
 
     // Cria slides e dots
     recommendationsData.forEach((rec, index) => {
-        const slide = document.createElement('article');
-        slide.className = 'recs-slide';
-        slide.setAttribute('role', 'group');
-        slide.setAttribute('aria-labelledby', `rec-${rec.id}-name`);
-        slide.setAttribute('aria-describedby', `rec-${rec.id}-text`);
-
+        // Cria o slide
+        const slide = document.createElement('div');
+        slide.className = `recs-slide ${index === 0 ? 'active' : ''}`;
+        slide.setAttribute('data-index', index);
+        
+        // Gera o avatar único para a pessoa
+        const avatarUrl = gerarAvatar(rec.name);
+        
+        // Cria o conteúdo do slide
         slide.innerHTML = `
             <div class="recs-slide-content">
-                <div class="recs-text" id="rec-${rec.id}-text">
+                <div class="recs-text">
                     <p>${rec.text}</p>
                 </div>
                 <div class="recs-footer">
                     <div class="recs-avatar">
-                        <span class="avatar-initials">${getInitials(rec.name)}</span>
+                        ${gerarAvatar(rec.name)}
                     </div>
-                    <div class="recs-info">
-                        <div class="recs-name-container">
-                            <h4 id="rec-${rec.id}-name" class="recs-name">${rec.name}</h4>
-                        </div>
-                        <p class="recs-role">${rec.role}</p>
-                        <a href="${rec.url}" 
-                           class="recs-linkedin-link" 
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           aria-label="Ver recomendação completa de ${rec.name} no LinkedIn">
+                    <div class="recs-author">
+                        <div class="recs-name">${rec.name}</div>
+                        <div class="recs-role">${rec.role}</div>
+                        <a href="${rec.url}" target="_blank" class="recs-linkedin-text" aria-label="Ver recomendação completa no LinkedIn">
                             Ver completo no LinkedIn
                         </a>
                     </div>
