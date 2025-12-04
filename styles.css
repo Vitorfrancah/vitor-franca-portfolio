@@ -300,17 +300,24 @@ ul {
 .theme-toggle {
   background: none;
   border: none;
-  color: var(--text-color);
-  font-size: 1.2rem;
+  color: #2A7BEB; /* Azul mais claro e brilhante */
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0;
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   transition: var(--transition);
+  line-height: 1;
+}
+
+.theme-toggle i {
+  font-size: 1.2rem;
+  display: inline-block;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
 }
 
 .theme-toggle:hover {
@@ -2284,6 +2291,7 @@ ul {
   padding-top: 1.5rem; /* Aumentei o padding superior */
   border-top: 1px solid rgba(0, 0, 0, 0.1); /* Linha um pouco mais visível */
   padding-bottom: 0.5rem;
+  gap: 10px;
 }
 
 .recs-avatar {
@@ -2291,7 +2299,6 @@ ul {
   height: 36px;
   border-radius: 50%;
   overflow: hidden;
-  margin-right: 0.75rem;
   flex-shrink: 0;
   border: none;
 }
