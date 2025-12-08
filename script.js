@@ -24,6 +24,50 @@ function setTheme(theme) {
 // Set current year in footer
 document.getElementById('current-year').textContent = new Date().getFullYear();
 
+// Mobile Menu Toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const navLinks = document.getElementById('navLinks');
+
+if (mobileMenuToggle && navLinks) {
+    mobileMenuToggle.addEventListener('click', () => {
+        mobileMenuToggle.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        // Previne scroll do body quando menu está aberto
+        if (navLinks.classList.contains('active')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Fecha o menu ao clicar em um link
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+    
+    // Fecha o menu ao clicar fora dele
+    document.addEventListener('click', (e) => {
+        if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            mobileMenuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Fecha o menu ao redimensionar a janela (se voltar para desktop)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            mobileMenuToggle.classList.remove('active');
+            navLinks.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+}
+
 // Dados do portfólio
 const aboutMe = {
     title: 'Sobre mim',
@@ -789,7 +833,10 @@ function renderTimeline() {
     // Limpa o conteúdo existente
     timelineContainer.innerHTML = '';
     
-    timelineData.forEach((item) => {
+    // Verifica se está em mobile/tablet
+    const isMobile = window.innerWidth <= 768;
+    
+    timelineData.forEach((item, index) => {
         const tagsHtml = item.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
         const highlightsHtml = item.highlights ? 
             '<div class="timeline-highlights"><strong>Principais Entregas/Responsabilidades:</strong><ul>' + 
@@ -799,20 +846,47 @@ function renderTimeline() {
         const timelineItem = document.createElement('div');
         timelineItem.className = 'timeline-item';
         
-        timelineItem.innerHTML = `
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-                <div class="timeline-date">${item.date}</div>
-                <h3 class="timeline-title">${item.title}</h3>
-                <div class="timeline-company">${item.company}</div>
-                <p class="timeline-description">${item.description}</p>
-                ${highlightsHtml}
-                ${tagsHtml ? `<div class="timeline-tags">${tagsHtml}</div>` : ''}
-            </div>
-        `;
+        // HTML para mobile/tablet com dropdown
+        if (isMobile) {
+            timelineItem.innerHTML = `
+                <button class="timeline-toggle" aria-expanded="false" aria-controls="timeline-content-${index}">
+                    <div class="timeline-toggle-header">
+                        <div>
+                            <div class="timeline-toggle-date">${item.date}</div>
+                            <h3 class="timeline-toggle-title">${item.title}</h3>
+                            <div class="timeline-company">${item.company}</div>
+                        </div>
+                        <i class="fas fa-chevron-down timeline-toggle-icon"></i>
+                    </div>
+                </button>
+                <div class="timeline-content" id="timeline-content-${index}">
+                    <p class="timeline-description">${item.description}</p>
+                    ${highlightsHtml}
+                    ${tagsHtml ? `<div class="timeline-tags">${tagsHtml}</div>` : ''}
+                </div>
+            `;
+        } else {
+            // HTML para desktop (layout original)
+            timelineItem.innerHTML = `
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">${item.date}</div>
+                    <h3 class="timeline-title">${item.title}</h3>
+                    <div class="timeline-company">${item.company}</div>
+                    <p class="timeline-description">${item.description}</p>
+                    ${highlightsHtml}
+                    ${tagsHtml ? `<div class="timeline-tags">${tagsHtml}</div>` : ''}
+                </div>
+            `;
+        }
         
         timelineContainer.appendChild(timelineItem);
     });
+    
+    // Inicializa os toggles em mobile/tablet
+    if (isMobile) {
+        initTimelineToggles();
+    }
     
     // Força a renderização inicial
     setTimeout(() => {
@@ -820,6 +894,51 @@ function renderTimeline() {
             item.classList.add('visible');
         });
     }, 100);
+}
+
+// Inicializa os toggles da timeline em mobile/tablet
+function initTimelineToggles() {
+    const timelineToggles = document.querySelectorAll('.timeline-toggle');
+    
+    timelineToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const timelineItem = toggle.closest('.timeline-item');
+            const isActive = timelineItem.classList.contains('active');
+            const contentId = toggle.getAttribute('aria-controls');
+            const content = document.getElementById(contentId);
+            
+            // Fecha todos os outros itens (accordion behavior)
+            document.querySelectorAll('.timeline-item').forEach(item => {
+                if (item !== timelineItem) {
+                    item.classList.remove('active');
+                    const otherToggle = item.querySelector('.timeline-toggle');
+                    const otherContentId = otherToggle?.getAttribute('aria-controls');
+                    const otherContent = otherContentId ? document.getElementById(otherContentId) : null;
+                    if (otherToggle) {
+                        otherToggle.setAttribute('aria-expanded', 'false');
+                    }
+                    if (otherContent) {
+                        otherContent.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Toggle do item atual
+            if (isActive) {
+                timelineItem.classList.remove('active');
+                toggle.setAttribute('aria-expanded', 'false');
+                if (content) {
+                    content.style.display = 'none';
+                }
+            } else {
+                timelineItem.classList.add('active');
+                toggle.setAttribute('aria-expanded', 'true');
+                if (content) {
+                    content.style.display = 'block';
+                }
+            }
+        });
+    });
 }
 
 // Render skills by category - Novo formato com quadrados grandes
@@ -1053,11 +1172,24 @@ function init() {
     // Initialize animations
     animateOnScroll();
     
-    // Initialize event listeners
-    initEventListeners();
-    
     // Add animation class to hero section on load
     document.querySelector('.hero-content').classList.add('animate-in');
+    
+    // Re-render timeline quando a janela é redimensionada (para alternar entre mobile/desktop)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const currentIsMobile = window.innerWidth <= 768;
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const hasToggle = timelineItems.length > 0 && timelineItems[0].querySelector('.timeline-toggle');
+            
+            // Só re-renderiza se mudou de mobile para desktop ou vice-versa
+            if ((currentIsMobile && !hasToggle) || (!currentIsMobile && hasToggle)) {
+                renderTimeline();
+            }
+        }, 250);
+    });
 }
 
 // Run when the DOM is fully loaded
