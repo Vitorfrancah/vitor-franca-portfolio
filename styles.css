@@ -29,6 +29,7 @@
   --transition: all 0.3s ease;
 }
 
+
 [data-theme="dark"] {
   /* Dark Theme ajustado para a nova paleta */
   --primary-color: #4A6FA5;
@@ -276,7 +277,6 @@ ul {
 .nav-links a {
   font-weight: 500;
   position: relative;
-  padding: 0.5rem 0;
   transition: all 0.2s ease;
 }
 
@@ -285,7 +285,7 @@ ul {
   background-color: var(--primary-color);
   color: #FFFFFF;
   font-weight: 500;
-  padding: 0.4rem 1.5rem;
+  padding: 0.4rem 2.3rem;
   border-radius: 9999px;
   margin-left: 1rem;
   transition: all 0.2s ease;
@@ -1205,6 +1205,10 @@ ul {
     left: 0;
     line-height: 1.4;
 }
+[data-issuer*="Universidade do Sul de Santa Catarina"] {
+  text-wrap: wrap;
+  width: 100%;
+}
 
 /* Responsividade */
 
@@ -1815,14 +1819,20 @@ ul {
 }
 
 /* Ajuste específico para o cartão da UNISUL */
-[data-issuer*="Universidade do Sul de Santa Catarina"] {
-  text-wrap: wrap;
-  width: 100%;
-}
-
 [data-issuer*="Universidade do Sul de Santa Catarina"] .certification-header {
   min-width: 100%;
   overflow: visible;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+[data-issuer*="Universidade do Sul de Santa Catarina"] .certification-issuer {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  flex: 1;
+  min-width: 0; /* Permite que o flex item encolha abaixo do seu tamanho mínimo de conteúdo */
 }
 
 [data-issuer*="Universidade do Sul de Santa Catarina"] .certification-logo {
